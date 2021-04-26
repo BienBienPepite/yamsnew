@@ -62,7 +62,7 @@ public class GameLogicUtil {
 		
 		for (String string : gameBean.getBonusAndTotalGrid().keySet()) {
 			
-			bonusAndTotalGrid.replace(string, gameBean.getBonusAndTotalGrid().get(string));
+			bonusAndTotalGrid.put(string, gameBean.getBonusAndTotalGrid().get(string));
 			
 		}
 		

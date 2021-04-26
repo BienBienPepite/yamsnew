@@ -13,7 +13,7 @@ public class BonusAndTotalPoints {
 	private static final String upperSectionBonusString  = "uppersectionbonus";
 	private static final String upperSectionTotalString  = "uppersectiontotal";
 	private static final String mediumSectionTotalString = "mediumsectiontotal";
-	private static final String lowerSectionTotalString  = "lowersectionbonus";
+	private static final String lowerSectionTotalString  = "lowersectiontotal";
 	
 	
 	public BonusAndTotalPoints() {
@@ -111,8 +111,6 @@ public class BonusAndTotalPoints {
 		
 		if (upperSectionPoints >= minimumToGetTheUpperSectionBonus) {
 			
-			upperSectionPoints += upperSectionBonusValue;
-			
 			this.bonusAndTotalPointsGrid.replace(upperSectionBonusString, upperSectionBonusValue);
 			
 		}
@@ -126,8 +124,16 @@ public class BonusAndTotalPoints {
 		/*
 		 * update the min-max section :
 		 * if the max and the min are filled in the grid, and if min < max :
-		 * set the total points to min + max
+		 * set the total points to min + max + upperSectionBonus
+		 * otherwise set it to upperSectionBonus
 		 */
+		
+		int bonus = this.bonusAndTotalPointsGrid.get(upperSectionBonusString);
+		
+		this.bonusAndTotalPointsGrid
+			.replace(mediumSectionTotalString, 
+					bonus
+					);
 		
 		Map<Figure, Integer> grid = scoreGrid.getGrid();
 		
@@ -142,7 +148,7 @@ public class BonusAndTotalPoints {
 			
 			if (min < max) {
 				
-				this.bonusAndTotalPointsGrid.replace(mediumSectionTotalString, min + max);
+				this.bonusAndTotalPointsGrid.replace(mediumSectionTotalString, min + max + bonus);
 			}
 		}
 			
