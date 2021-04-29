@@ -10,6 +10,11 @@ import com.avl.yamsnew.beans.GameBean;
 import com.avl.yamsnew.gamecontroller.GameController;
 
 public class GameForm {
+	
+	/*
+	 * receive the request and translate it in a way that is understandable by the game
+	 * controller (GameController.java)
+	 */
 
 	public static final String FIELD_DICES = "dices";
 	public static final String FIELD_BOX   = "box";
@@ -34,10 +39,24 @@ public class GameForm {
 	}
 	
 	private void putError(String field, String errorMessage) {
+		
+		/*
+		 * put an error in the map :
+		 * - the key is the field : which part of the request is concerned by the error
+		 * (basically, does this error appears because the user filled wrongly the score grid
+		 * or is it because he didn't roll the dices according to the rules)
+		 * - the error message is the true cause of the error, what will be shown to the user
+		 */
+		
 		this.errors.put(field, errorMessage);
 	}
 	
+	
 	public void updateGameBean(HttpServletRequest request, GameBean gameBean) {
+		
+		/*
+		 * pass the request to the game controller after having translating it :
+		 */
 		
 		String[] dices   = getFieldValues(request, FIELD_DICES);
 		
@@ -65,6 +84,15 @@ public class GameForm {
 	
 	private void rollGameBean(String[] dices, GameController gameController) {
 		
+		/*
+		 * called if the request consists in rolling dices
+		 * - the request is transformed in another which follows the pattern : 
+		 * roll{1-5}[1-5] to be understood by the game controller
+		 * - try to call the game controller and update the game :
+		 * 		- if there is an error, put it in the errors map
+		 * 		- otherwise, update the gameBean
+		 */
+		
 		String requestToGameController = "roll";
 		
 		if (dices != null) {
@@ -91,6 +119,15 @@ public class GameForm {
 	
 	private void fillGameBean(String boxToFill, GameController gameController) {
 		
+		/*
+		 * called if the request consists in filling score grid
+		 * - the request is transformed in another which follows the pattern : 
+		 * "fill" + "a figure" to be understood by the game controller
+		 * - try to call the game controller and update the game :
+		 * 		- if there is an error, put it in the errors map
+		 * 		- otherwise, update the gameBean
+		 */
+		
 		String requestToGameController = "fill" + boxToFill;
 		
 		try {
@@ -106,6 +143,7 @@ public class GameForm {
 	
 	
 	public String getFieldValue(HttpServletRequest request, String field) {
+		
 		String value = request.getParameter(field);
 		
 		if (value == null || value.trim().length() == 0) {
@@ -115,6 +153,7 @@ public class GameForm {
 			return value.trim();
 		}
 	}
+	
 	
 	public String[] getFieldValues(HttpServletRequest request, String field) {
 		String[] values = request.getParameterValues(field);

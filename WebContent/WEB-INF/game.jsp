@@ -2,39 +2,75 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<link rel="stylesheet" href="game.css">
 <title>Game</title>
 </head>
 <body>
 	
-	<p>${ game.currentDiceRoll }</p>
+	<c:choose>
 	
-	<form method="post">
+		<c:when test="${ game.finished }">
+			<p>Game over</p>
+		</c:when>
 		
-		<c:forEach var="dice" items="${game.currentHand}" varStatus="status">
-				<input type="checkbox" id="dices" name="dices" value="${status.count}">${ dice }
-		</c:forEach>
-		
-		<button type="submit" id="roll" name="roll" value="roll">Roll</button>
-		
-	</form>
+		<c:otherwise>
+			
+			<div class="rollingDices">
+			
+			<form method="post">
+			
+				<c:forEach var="dice" items="${game.currentHand}" varStatus="status">
+					<label class="diceContainer">
+						<input type="checkbox" id="dices" name="dices" value="${status.count}" ${ game.currentDiceRoll == 3 || game.currentDiceRoll == 0 ? "disabled" : "" }>
+						<span class="checkmark ${ dice }" ></span>
+					</label>
+				</c:forEach>
+				
+				<button type="submit" id="roll" name="roll" value="roll" ${ game.currentDiceRoll == 3 ? "disabled" : "" }>
+					<c:choose>
+						<c:when test="${ game.currentDiceRoll == 0}">
+							First Roll
+						</c:when>
+						<c:when test="${ game.currentDiceRoll == 1}">
+							Second Roll
+						</c:when>
+						<c:when test="${ game.currentDiceRoll == 2}">
+							Last Roll
+						</c:when>
+						<c:when test="${ game.currentDiceRoll == 3}">
+							No more Roll
+						</c:when>
+					</c:choose> 
+				</button>
+				
+			</form>
+			
+			<p class="error ${ form.errors['roll'] == null}">
+				Error : ${ form.errors['roll'] }
+			</p>
+			
+			</div>
+			
+		</c:otherwise>
 	
-	<c:if test="${ form.errors['roll'] != null }">
-		<p>${ form.errors['roll'] }</p>
-	</c:if>
+	</c:choose>
 	
 	<form method="post">
 	
 		<table>
 		
 			<tr>
-				<td>ACE</td>
+				<td><p class="figure">ACE</p></td>
 				<td>
 					<c:choose>
 						<c:when test="${empty game.scoreGrid['ace']}">
-							<input type="radio" id="box" name="box" value="ace">
+							<label class="boxContainer">
+								<input type="radio" id="box" name="box" value="ace">
+								<span class="box"></span>
+							</label>
 						</c:when>
 						<c:otherwise>
-							${game.scoreGrid['ace']}
+							<p class="score">${game.scoreGrid['ace']}</p>
 						</c:otherwise>
 					</c:choose>
 				</td>
@@ -44,184 +80,217 @@
 			</tr>
 		
 			<tr>
-				<td>TWO</td>
+				<td><p class="figure">TWO</p></td>
 				<td>
 					<c:choose>
 						<c:when test="${empty game.scoreGrid['two']}">
-							<input type="radio" id="box" name="box" value="two">
+							<label class="boxContainer">
+								<input type="radio" id="box" name="box" value="two">
+								<span class="box"></span>
+							</label>
 						</c:when>
 						<c:otherwise>
-							${game.scoreGrid['two']}
+							<p class="score">${game.scoreGrid['two']}</p>
 						</c:otherwise>
 					</c:choose>
 				</td>
 			</tr>
 		
 			<tr>
-				<td>THREE</td>
+				<td><p class="figure">THREE</p></td>
 				<td>
 					<c:choose>
 						<c:when test="${empty game.scoreGrid['three']}">
-							<input type="radio" id="box" name="box" value="three">
+							<label class="boxContainer">
+								<input type="radio" id="box" name="box" value="three">
+								<span class="box"></span>
+							</label>
 						</c:when>
 						<c:otherwise>
-							${game.scoreGrid['three']}
+							<p class="score">${game.scoreGrid['three']}</p>
 						</c:otherwise>
 					</c:choose>
 				</td>
 			</tr>
 		
 			<tr>
-				<td>FOUR</td>
+				<td><p class="figure">FOUR</p></td>
 				<td>
 					<c:choose>
 						<c:when test="${empty game.scoreGrid['four']}">
-							<input type="radio" id="box" name="box" value="four">
+							<label class="boxContainer">
+								<input type="radio" id="box" name="box" value="four">
+								<span class="box"></span>
+							</label>
 						</c:when>
 						<c:otherwise>
-							${game.scoreGrid['four']}
+							<p class="score">${game.scoreGrid['four']}</p>
 						</c:otherwise>
 					</c:choose>
 				</td>
 			</tr>
 		
 			<tr>
-				<td>FIVE</td>
+				<td><p class="figure">FIVE</p></td>
 				<td>
 					<c:choose>
 						<c:when test="${empty game.scoreGrid['five']}">
-							<input type="radio" id="box" name="box" value="five">
+							<label class="boxContainer">
+								<input type="radio" id="box" name="box" value="five">
+								<span class="box"></span>
+							</label>
 						</c:when>
 						<c:otherwise>
-							${game.scoreGrid['five']}
+							<p class="score">${game.scoreGrid['five']}</p>
 						</c:otherwise>
 					</c:choose>
 				</td>
 			</tr>
 		
 			<tr>
-				<td>SIX</td>
+				<td><p class="figure">SIX</p></td>
 				<td>
 					<c:choose>
 						<c:when test="${empty game.scoreGrid['six']}">
-							<input type="radio" id="box" name="box" value="six">
+							<label class="boxContainer">
+								<input type="radio" id="box" name="box" value="six">
+								<span class="box"></span>
+							</label>
 						</c:when>
 						<c:otherwise>
-							${game.scoreGrid['six']}
+							<p class="score">${game.scoreGrid['six']}</p>
 						</c:otherwise>
 					</c:choose>
 				</td>
 			</tr>
 			
 			<tr>
-				<td>UPPER SECTION TOTAL</td>
+				<td><p class="figure total">UPPER SECTION TOTAL</p></td>
 				<td>
-					${game.bonusAndTotalGrid['uppersectiontotal']}
+					<p class="score total">${game.bonusAndTotalGrid['uppersectiontotal']}</p>
 				</td>
 			</tr>
 			
 			<tr>
-				<td>UPPER SECTION BONUS</td>
+				<td><p class="figure total">UPPER SECTION BONUS</p></td>
 				<td>
-					${game.bonusAndTotalGrid['uppersectionbonus']}
+					<p class="score total">${game.bonusAndTotalGrid['uppersectionbonus']}</p>
 				</td>
 			</tr>
 		
 			<tr>
-				<td>MIN</td>
+				<td><p class="figure">MIN</p></td>
 				<td>
 					<c:choose>
 						<c:when test="${empty game.scoreGrid['min']}">
-							<input type="radio" id="box" name="box" value="min">
+							<label class="boxContainer">
+								<input type="radio" id="box" name="box" value="min">
+								<span class="box"></span>
+							</label>
 						</c:when>
 						<c:otherwise>
-							${game.scoreGrid['min']}
+							<p class="score">${game.scoreGrid['min']}</p>
 						</c:otherwise>
 					</c:choose>
 				</td>
 			</tr>
 		
 			<tr>
-				<td>MAX</td>
+				<td><p class="figure">MAX</p></td>
 				<td>
 					<c:choose>
 						<c:when test="${empty game.scoreGrid['max']}">
-							<input type="radio" id="box" name="box" value="max">
+							<label class="boxContainer">
+								<input type="radio" id="box" name="box" value="max">
+								<span class="box"></span>
+							</label>
 						</c:when>
 						<c:otherwise>
-							${game.scoreGrid['max']}
+							<p class="score">${game.scoreGrid['max']}</p>
 						</c:otherwise>
 					</c:choose>
 				</td>
 			</tr>
 			
 			<tr>
-				<td>MEDIUM SECTION TOTAL</td>
+				<td><p class="figure total">MEDIUM SECTION TOTAL</p></td>
 				<td>
-					${game.bonusAndTotalGrid['mediumsectiontotal']}
+					<p class="score total">${game.bonusAndTotalGrid['mediumsectiontotal']}</p>
 				</td>
 			</tr>
 		
 			<tr>
-				<td>FULLHOUSE</td>
+				<td><p class="figure">FULLHOUSE</p></td>
 				<td>
 					<c:choose>
 						<c:when test="${empty game.scoreGrid['fullhouse']}">
-							<input type="radio" id="box" name="box" value="fullhouse">
+							<label class="boxContainer">
+								<input type="radio" id="box" name="box" value="fullhouse">
+								<span class="box"></span>
+							</label>
 						</c:when>
 						<c:otherwise>
-							${game.scoreGrid['fullhouse']}
+							<p class="score">${game.scoreGrid['fullhouse']}</p>
 						</c:otherwise>
 					</c:choose>
 				</td>
 			</tr>
 			
 			<tr>
-				<td>FOUROFAKIND</td>
+				<td><p class="figure">FOUROFAKIND</p></td>
 				<td>
 					<c:choose>
 						<c:when test="${empty game.scoreGrid['fourofakind']}">
-							<input type="radio" id="box" name="box" value="fourofakind">
+							<label class="boxContainer">
+								<input type="radio" id="box" name="box" value="fourofakind">
+								<span class="box"></span>
+							</label>
 						</c:when>
 						<c:otherwise>
-							${game.scoreGrid['fourofakind']}
+							<p class="score">${game.scoreGrid['fourofakind']}</p>
 						</c:otherwise>
 					</c:choose>
 				</td>
 			</tr>
 			
 			<tr>
-				<td>STRAIGHT</td>
+				<td><p class="figure">STRAIGHT</p></td>
 				<td>
 					<c:choose>
 						<c:when test="${empty game.scoreGrid['straight']}">
-							<input type="radio" id="box" name="box" value="straight">
+							<label class="boxContainer">
+								<input type="radio" id="box" name="box" value="straight">
+								<span class="box"></span>
+							</label>
 						</c:when>
 						<c:otherwise>
-							${game.scoreGrid['straight']}
+							<p class="score">${game.scoreGrid['straight']}</p>
 						</c:otherwise>
 					</c:choose>
 				</td>
 			</tr>
 			
 			<tr>
-				<td>YAHTZEE</td>
+				<td><p class="figure">YAHTZEE</p></td>
 				<td>
 					<c:choose>
 						<c:when test="${empty game.scoreGrid['yahtzee']}">
-							<input type="radio" id="box" name="box" value="yahtzee">
+							<label class="boxContainer">
+								<input type="radio" id="box" name="box" value="yahtzee">
+								<span class="box"></span>
+							</label>
 						</c:when>
 						<c:otherwise>
-							${game.scoreGrid['yahtzee']}
+							<p class="score">${game.scoreGrid['yahtzee']}</p>
 						</c:otherwise>
 					</c:choose>
 				</td>
 			</tr>
 			
 			<tr>
-				<td>LOWER SECTION TOTAL</td>
+				<td><p class="figure total">LOWER SECTION TOTAL</p></td>
 				<td>
-					${game.bonusAndTotalGrid['lowersectiontotal']}
+					<p class="score total">${game.bonusAndTotalGrid['lowersectiontotal']}</p>
 				</td>
 			</tr>
 			

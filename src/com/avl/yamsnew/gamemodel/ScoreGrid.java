@@ -41,6 +41,14 @@ public class ScoreGrid {
 		
 		return fullHousePoints;
 	}
+	
+	public static int getYahtzeePoints() {
+		/*
+		 * this getter is only used to test the program
+		 */
+		
+		return yahtzeePoints;
+	}
 
 	public void fill(Figure figure, Hand hand) {
 		
@@ -91,7 +99,7 @@ public class ScoreGrid {
 				points = hand.isStraight() ? straightPoints : 0; 
 			}
 			else {
-				points = hand.isFullHouse() ? yahtzeePoints : 0; 
+				points = hand.isYahtzee() ? yahtzeePoints : 0; 
 			}
 			
 			grid.put(figure, points);

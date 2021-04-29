@@ -8,6 +8,11 @@ import java.util.stream.Stream;
 
 public class GameBean {
 	
+	/*
+	 * class which is an image of the game and which can be used in a jsp document :
+	 *  only primitive types and getters and setters
+	 */
+	
 	private int currentDiceRoll;
 	private String[] currentHand;
 	private Map<String, Integer> scoreGrid;
@@ -20,22 +25,6 @@ public class GameBean {
 		currentDiceRoll = 0;
 		
 		currentHand =  new String[]{"ACE", "ACE", "ACE", "ACE", "ACE"};
-		
-		/*scoreGrid = Stream.of(
-				  new AbstractMap.SimpleEntry<>("ace", 0), 
-				  new AbstractMap.SimpleEntry<>("two", 0),
-				  new AbstractMap.SimpleEntry<>("three", 0), 
-				  new AbstractMap.SimpleEntry<>("four", 0),
-				  new AbstractMap.SimpleEntry<>("five", 0), 
-				  new AbstractMap.SimpleEntry<>("six", 0),
-				  new AbstractMap.SimpleEntry<>("min", 0), 
-				  new AbstractMap.SimpleEntry<>("max", 0),
-				  new AbstractMap.SimpleEntry<>("fullhouse", 0),
-				  new AbstractMap.SimpleEntry<>("fourofakind", 0), 
-				  new AbstractMap.SimpleEntry<>("straight", 0),
-				  new AbstractMap.SimpleEntry<>("yahtzee", 0)
-				  )
-				  .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));*/
 		
 		scoreGrid = new HashMap<String, Integer>();
 		

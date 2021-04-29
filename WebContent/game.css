@@ -1,0 +1,201 @@
+@charset "UTF-8";
+
+@font-face{
+	font-family: 'munro';
+	src: url('munro.ttf');
+}
+
+body{
+	margin: 0;
+	padding: 0;
+}
+
+.rollingDices{
+	background-color : #bdc1cc;
+	padding-top : 20px;
+	padding-bottom : 0px;
+	padding-left : 0px;
+}
+
+form {
+	position : relative;
+	display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.diceContainer {
+	display: inline-block;
+	position: relative;
+	padding-left: 105px;
+	margin-bottom: 100px;
+	cursor: pointer;
+}
+
+/*hide the browser checkbox*/
+.diceContainer input {
+	position: absolute;
+	opacity: 0;
+	cursor: pointer;
+	height: 0;
+	width: 0;
+}
+
+.checkmark {
+	border-radius : 5px;
+	background-size : contain;
+	background-color: #9a9cad;
+	position: absolute;
+	top: 0;
+	left: 0;
+	margin-right: 11Opx;
+	height: 100px;
+	width: 100px;
+}
+
+.ACE{
+	content: url(img/ACE.png);
+}
+
+.TWO{
+	content: url(img/TWO.png);
+}
+
+.THREE{
+	content: url(img/THREE.png);
+}
+
+.FOUR{
+	content: url(img/FOUR.png);
+}
+
+.FIVE{
+	content: url(img/FIVE.png);
+}
+
+.SIX{
+	content: url(img/SIX.png);
+}
+
+.diceContainer:hover input ~ .checkmark {
+	background-color: #a7acd1;
+}
+
+.diceContainer input:checked ~ .checkmark {
+  background-color: #edf1c6;
+}
+
+
+button[type=submit] {
+	height : 100px;
+	width : 100px;
+	
+	color: white;
+	font-family: munro;
+	font-size : 20px;
+	
+	background-color : #1F233C;
+	
+	border : none;
+	border-radius : 15px;
+	margin-left : 20px;
+	
+	cursor: pointer;
+}
+
+
+button[type=submit]:hover{
+	background-color : #373E6C;
+}
+
+button[type=submit]:disabled{
+	background-color : #860404;
+}
+
+.error{
+	position:relative;
+	left : 30%;
+	top : -10px;
+	
+	font-family:munro;
+	font-size: 20px;
+}
+
+.false{
+	color : white;
+}
+
+.true{
+	visibility : hidden;
+}
+
+
+.figure, .score{
+	padding:0;
+	padding-top: 8px;
+	margin:0;;
+	height: 30px;
+	
+	font-family: munro;
+	font-size: 20px;
+	color: white;
+	text-align : center;
+	vertical-align : middle;
+	
+	cursor:default;
+	
+	background-color: #bdc1cc; 
+}
+
+.figure{
+	
+	width: 300px;
+}
+
+.score{
+	width: 38px;
+}
+
+.total{
+	background-color: #a7acd1; 
+}
+
+.boxContainer {
+	display: inline-block;
+	position: relative;
+	cursor: pointer;
+}
+
+/*hide the browser checkbox*/
+.boxContainer input {
+	position: absolute;
+	opacity: 0;
+	cursor: pointer;
+	height: 0;
+	width: 0;
+}
+
+.box {
+	position: absolute;
+	top: 0;
+	left: 0;
+	
+	transform: translate(0, -65%);
+	
+	height: 38px;
+	width: 38px;
+	
+	background-color: #9a9cad;
+}
+
+.boxContainer:hover input ~ .box {
+	background-color: #a7acd1;
+}
+
+.boxContainer input:checked ~ .box {
+  background-color: #edf1c6;
+}
+
+#fill{
+	height: 680px;
+}

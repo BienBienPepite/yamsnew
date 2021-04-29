@@ -66,12 +66,15 @@ public class ScoreGridTest {
 		
 		DiceValue[] basicDices = {DiceValue.ACE, DiceValue.FIVE, DiceValue.ACE, DiceValue.SIX, DiceValue.FIVE};
 		DiceValue[] fullHouseDices = {DiceValue.ACE, DiceValue.FIVE, DiceValue.ACE, DiceValue.FIVE, DiceValue.FIVE};
+		DiceValue[] yahtzeeDices = {DiceValue.FIVE, DiceValue.FIVE, DiceValue.FIVE, DiceValue.FIVE, DiceValue.FIVE};
 		
 		Hand basicHand     = new Hand(basicDices);
 		Hand fullHouseHand = new Hand(fullHouseDices);
+		Hand yahtzeeHand   = new Hand(yahtzeeDices);
 		
 		int expectedBasicHandFullHouseScore     = 0;
 		int expectedFullHouseHandFullHouseScore = ScoreGrid.getFullHousePoints();
+		int expectedYahtzeeHandYahtzeeScore = ScoreGrid.getYahtzeePoints();
 		
 		scoreGrid.fill(Figure.FULLHOUSE, basicHand);
 		
@@ -87,6 +90,15 @@ public class ScoreGridTest {
 		int actualFullHouseHandFullHouseScore = scoreGrid.getGrid().get(Figure.FULLHOUSE);
 		
 		assertEquals(expectedFullHouseHandFullHouseScore, actualFullHouseHandFullHouseScore);
+		
+		
+		scoreGrid.clearGrid();
+		
+		scoreGrid.fill(Figure.YAHTZEE, yahtzeeHand);
+		
+		int actualYahtzeeHandYahtzeeScore = scoreGrid.getGrid().get(Figure.YAHTZEE);
+		
+		assertEquals(expectedYahtzeeHandYahtzeeScore, actualYahtzeeHandYahtzeeScore);
 	}
 
 }

@@ -35,7 +35,7 @@ public class GameController {
 		
 		try {
 			
-			checkRequest(request);
+			checkRequest(request); // could throw an exception (see below)
 			
 			if (request.matches("^roll[1-5]{1,5}+$")) {
 				
@@ -47,7 +47,7 @@ public class GameController {
 					indexOfDicesToRoll[i] = Integer.parseInt(str.substring(i, i+1)) - 1;
 				}
 					
-				game.rollDices(indexOfDicesToRoll);
+				game.rollDices(indexOfDicesToRoll); // could throw an exception
 				
 				
 			}
@@ -81,7 +81,12 @@ public class GameController {
 		if (!request.matches("^roll[1-5]{1,5}+$")
 				&& !request.matches("^fill"
 						+ "(ace|two|three|four|five|six|min|max|fullhouse|fourofakind|straight|yahtzee)$")) {
-			throw new Exception("Make a valid request");
+			if (request.equals("fill")) {
+				throw new Exception("You must check a box to fill");
+			}
+			else {
+				throw new Exception("Make a valid request");
+			}
 		}
 	}
 	
