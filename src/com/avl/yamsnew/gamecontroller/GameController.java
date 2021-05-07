@@ -2,24 +2,22 @@ package com.avl.yamsnew.gamecontroller;
 
 import com.avl.yamsnew.gamemodel.Figure;
 import com.avl.yamsnew.gamemodel.Game;
-import com.avl.yamsnew.gamemodel.GameLogicUtil;
-import com.avl.yamsnew.beans.GameBean;
 
 public class GameController {
 	
-	private GameBean gameBean;
+	private Game game;
 	
 	
 	public GameController() {
-		gameBean = new GameBean();
+		game = new Game();
 	}
 	
-	public GameController(GameBean gameBean) {
-		this.gameBean = gameBean;
+	public GameController(Game game) {
+		this.game = game;
 	}
 	
-	public GameBean getGameBean() {
-		return gameBean;
+	public Game getGame() {
+		return game;
 	}
 	
 	
@@ -30,8 +28,6 @@ public class GameController {
 		 * - catch an exception if there is one thrown (could be thrown by the model) and throw it
 		 * - update the game and the gameBean
 		 * */
-		
-		Game game = GameLogicUtil.getGameFromGameBean(gameBean);
 		
 		try {
 			
@@ -59,8 +55,6 @@ public class GameController {
 				
 				game.fillScoreGrid(figure);
 			}
-			
-			gameBean = GameLogicUtil.getGameBeanFromGame(game);
 			
 			
 		} catch (Exception e) {

@@ -2,17 +2,16 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<link rel="stylesheet" href="game.css">
 <script src="game.js"></script>
-<title>Insert title here</title>
+<title>Game</title>
 </head>
 
-<body>
-
-	<p>${ sessionScope.user.username }</p>
+<body onload="getGameState()">
 
 	<div id="gameBoard">
 	
-		<input type="button" class="button" id="roll" name="roll" value="Roll">
+		<input type="button" class="button" id="roll" name="roll" value="Roll" onclick="rollGame()">
 		
 		<div id="rollingDices">
 		</div>
@@ -21,7 +20,7 @@
 	
 	<div id="scoreGrid">
 		
-		<div >
+		<div id="grid">
 		</div>
 		
 		<input type="button" class="button" id="fill" name="fill" value="Fill">

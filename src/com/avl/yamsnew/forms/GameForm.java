@@ -1,13 +1,18 @@
 package com.avl.yamsnew.forms;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
 import com.avl.yamsnew.beans.GameBean;
+import com.avl.yamsnew.beans.UserBean;
+import com.avl.yamsnew.dao.DAOException;
+import com.avl.yamsnew.dao.GameDao;
 import com.avl.yamsnew.gamecontroller.GameController;
+import com.avl.yamsnew.gamemodel.Game;
+import com.avl.yamsnew.util.JsonUtil;
+import com.google.gson.JsonObject;
 
 public class GameForm {
 	
@@ -16,18 +21,19 @@ public class GameForm {
 	 * controller (GameController.java)
 	 */
 
-	public static final String FIELD_DICES = "dices";
-	public static final String FIELD_BOX   = "box";
-	public static final String FIELD_ROLL  = "roll";
-	public static final String FIELD_FILL  = "fill";
+	public static final String FIELD_DICES  = "dices";
+	public static final String FIELD_BOX    = "box";
+	public static final String FIELD_ROLL   = "roll";
+	public static final String FIELD_FILL   = "fill";
+	public static final String ATT_USER     = "user";
 	
-	private GameBean gameBean = new GameBean();
 	private Map<String, String> errors = new HashMap<String, String>();
 	private String result="";
 	
+	private GameDao gameDao;
 	
-	public GameBean getGameBean() {
-		return this.gameBean;
+	public GameForm( GameDao gameDao ) {
+	    this.gameDao = gameDao;
 	}
 	
 	public String getResult() {
@@ -52,37 +58,78 @@ public class GameForm {
 	}
 	
 	
-	public void updateGameBean(HttpServletRequest request, GameBean gameBean) {
+	public GameBean getNewGameBean(HttpServletRequest request) {
 		
 		/*
 		 * pass the request to the game controller after having translating it :
 		 */
 		
-		String[] dices   = getFieldValues(request, FIELD_DICES);
+		String username = ((UserBean) request.getSession().getAttribute(ATT_USER)).getUsername();
+		
+		String    roll = null;
+		String[] dices = null;
+		
+		
+		JsonObject jsonRequest = JsonUtil.parseRequest(request);
+		
+		if (jsonRequest != null) {
+			roll  = JsonUtil.getRollValue(jsonRequest);
+			dices = JsonUtil.getDicesValue(jsonRequest);
+		}
+		
 		
 		String boxToFill = getFieldValue(request, FIELD_BOX);
-		
-		String roll      = getFieldValue(request, FIELD_ROLL);
-		
 		String fill      = getFieldValue(request, FIELD_FILL);
-
-		GameController gameController = new GameController(gameBean);
 		
-		if (roll != null) {
+		GameBean gameBean = gameDao.read(username);
+		
+		try {
 			
-			rollGameBean(dices, gameController);
+			if (gameBean == null) {
+				
+				gameBean = new GameBean();
+				gameBean.setUsername(username);
+				
+				gameDao.create(gameBean);
+				
+			}
 			
+			
+			if (roll != null || fill != null) {
+				
+				String gameState = gameBean.getGamestate();
+				Game game = JsonUtil.jsonToGame(gameState);
+				GameController gameController = new GameController(game);
+				
+				if (roll != null) {
+					rollGame(dices, gameController);
+				}
+				
+				else {
+					fillGame(boxToFill, gameController);
+				}
+				
+				game = gameController.getGame();
+				
+				// update the game state in the database
+				String newGameState = JsonUtil.gameToJson(game);
+				gameBean.setGamestate(newGameState);
+				gameDao.update(gameBean);
+			}
+			
+		} catch(DAOException e) {
+			
+			result = "Connection failed : an unknown error occurred.";
+	        e.printStackTrace();
+	        
 		}
 		
-		else if (fill != null) {
-			
-			fillGameBean(boxToFill, gameController);
-			
-		}
+		return gameBean;
+		
 	}
 	
 	
-	private void rollGameBean(String[] dices, GameController gameController) {
+	private void rollGame(String[] dices, GameController gameController) {
 		
 		/*
 		 * called if the request consists in rolling dices
@@ -90,12 +137,12 @@ public class GameForm {
 		 * roll{1-5}[1-5] to be understood by the game controller
 		 * - try to call the game controller and update the game :
 		 * 		- if there is an error, put it in the errors map
-		 * 		- otherwise, update the gameBean
+		 * 		- otherwise, update the game
 		 */
 		
 		String requestToGameController = "roll";
 		
-		if (dices != null) {
+		if (dices != null && dices.length != 0) {
 			for (String str : dices) {
 				
 				requestToGameController += (str == null) ? "" : str;
@@ -109,7 +156,6 @@ public class GameForm {
 		try {
 			
 			gameController.updateGame(requestToGameController);
-			this.gameBean = gameController.getGameBean();
 			
 		} catch (Exception e) {
 			putError(FIELD_ROLL, e.getMessage());
@@ -117,7 +163,7 @@ public class GameForm {
 	}
 	
 	
-	private void fillGameBean(String boxToFill, GameController gameController) {
+	private void fillGame(String boxToFill, GameController gameController) {
 		
 		/*
 		 * called if the request consists in filling score grid
@@ -125,7 +171,7 @@ public class GameForm {
 		 * "fill" + "a figure" to be understood by the game controller
 		 * - try to call the game controller and update the game :
 		 * 		- if there is an error, put it in the errors map
-		 * 		- otherwise, update the gameBean
+		 * 		- otherwise, update the game
 		 */
 		
 		String requestToGameController = "fill" + boxToFill;
@@ -133,7 +179,6 @@ public class GameForm {
 		try {
 			
 			gameController.updateGame(requestToGameController);
-			this.gameBean = gameController.getGameBean();
 			
 		}  catch (Exception e) {
 			putError(FIELD_FILL, e.getMessage());
@@ -151,23 +196,6 @@ public class GameForm {
 		}
 		else {
 			return value.trim();
-		}
-	}
-	
-	
-	public String[] getFieldValues(HttpServletRequest request, String field) {
-		String[] values = request.getParameterValues(field);
-		
-		if (values == null) {
-			return null;
-		}
-		else {
-			String[] fieldValues = Arrays.stream(values)
-					.map(str -> str.trim())
-					.filter(str -> str.trim().length() != 0)
-					.toArray(String[]::new);
-			
-			return fieldValues;
 		}
 	}
 	
